@@ -6,29 +6,28 @@
 import sys
 # cv2の読み込みエラー防止
 #sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
-sys.path.remove('/home/limlab/.local/lib/python2.7/site-packages')
 import cv2
-#print(cv2.getBuildInformation())
+import os
 
-# DEVICE_ID = 0
-# cap = cv2.VideoCapture(DEVICE_ID)
-# cap = cv2.VideoCapture(0 + cv2.CAP_V4L)
-# cap = cv2.VideoCapture('/home/limlab/ビデオ/src_hirano.mp4')
+username = "ubuntu"
+sys.path.remove('/home/{}/.local/lib/python2.7/site-packages'.format(username))
+save_path = os.path.join('/home/{}/Programs'.format(username), "image1.png")
 cap = cv2.VideoCapture(0)
-print(cap.isOpened())
-# cap = cv2.VideoCapture(0)
-
+print("cap.isOpened:{}".format(cap.isOpened()))
 
 while True:
-    ret, frame = cap.read()
+    ret, img = cap.read()
     if not ret:
         print('キャプチャーに失敗しました')
         break 
 
-    cv2.imshow('frame', frame)
+    cv2.namedWindow("exit and save to push Q key")
+    cv2.imshow("exit and save to push Q key", img)
 
-    # q キーを押したら終了
+    # Qキーを押したら終了
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.imwrite(save_path ,img)
+        print('{}として保存しました'.format(save_path))
         break
 
 cap.release()
